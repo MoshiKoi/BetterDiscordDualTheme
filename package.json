@@ -1,0 +1,30 @@
+{
+  "name": "dual-theme",
+  "version": "1.0.0",
+  "description": "Automatically switch between light and dark themes",
+  "displayName": "DualThemes",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "MoshKoi",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.24.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.24.0",
+  "type": "module",
+  "devDependencies": {
+    "@betterdiscord/types": "^1.14.0",
+    "@types/node": "^26.4.0",
+    "ts-loader": "^9.6.2",
+    "typescript": "^6.0.3",
+    "webpack": "^5.110.1",
+    "webpack-cli": "^7.2.3"
+  }
+}
