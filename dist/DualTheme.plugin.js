@@ -3,7 +3,7 @@
  * @author MoshKoi
  * @authorLink https://github.com/MoshiKoi
  * @description Automatically switch between light and dark themes
- * @version 1.0.0
+ * @version 1.0.1
  * @source https://github.com/MoshiKoi/BetterDiscordDualTheme
  */
 /******/ (() => { // webpackBootstrap
@@ -44,9 +44,9 @@ __webpack_require__.r(__webpack_exports__);
 class DualThemePlugin {
     #bdApi = new BdApi("DualTheme");
     get #lightTheme() { return this.#bdApi.Data.load("lightTheme"); }
-    set #lightTheme(value) { this.#bdApi.Data.save("lightTheme", value); }
+    set #lightTheme(value) { value ? this.#bdApi.Data.save("lightTheme", value) : this.#bdApi.Data.delete("lightTheme"); }
     get #darkTheme() { return this.#bdApi.Data.load("darkTheme"); }
-    set #darkTheme(value) { this.#bdApi.Data.save("darkTheme", value); }
+    set #darkTheme(value) { value ? this.#bdApi.Data.save("darkTheme", value) : this.#bdApi.Data.delete("darkTheme"); }
     #preference = window.matchMedia("(prefers-color-scheme: light)");
     #listener = this.#onChange.bind(this);
     start() {
@@ -57,18 +57,22 @@ class DualThemePlugin {
     }
     getSettingsPanel() {
         const themes = BdApi.Themes.getAll().filter(x => x != undefined);
+        const themeOptions = [
+            { label: "Discord", value: undefined },
+            ...themes.map(x => ({ label: x.name, value: x.id }))
+        ];
         const lightThemeSetting = {
             id: "lightTheme",
             name: "Light Theme",
             type: "dropdown",
-            options: themes.map(x => ({ label: x.name, value: x.id })),
+            options: themeOptions,
             value: this.#lightTheme
         };
         const darkThemeSetting = {
             id: "darkTheme",
             name: "Dark Theme",
             type: "dropdown",
-            options: themes.map(x => ({ label: x.name, value: x.id })),
+            options: themeOptions,
             value: this.#darkTheme
         };
         return BdApi.UI.buildSettingsPanel({
