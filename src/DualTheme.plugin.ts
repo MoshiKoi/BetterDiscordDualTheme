@@ -2,10 +2,10 @@ export default class DualThemePlugin {
     #bdApi = new BdApi("DualTheme");
 
     get #lightTheme(): string | undefined { return this.#bdApi.Data.load("lightTheme"); }
-    set #lightTheme(value: string | undefined) { this.#bdApi.Data.save("lightTheme", value); }
+    set #lightTheme(value: string | undefined) { value ? this.#bdApi.Data.save("lightTheme", value) : this.#bdApi.Data.delete("lightTheme"); }
 
     get #darkTheme(): string | undefined { return this.#bdApi.Data.load("darkTheme"); }
-    set #darkTheme(value: string | undefined) { this.#bdApi.Data.save("darkTheme", value); }
+    set #darkTheme(value: string | undefined) { value ? this.#bdApi.Data.save("darkTheme", value) : this.#bdApi.Data.delete("darkTheme"); }
 
     #preference = window.matchMedia("(prefers-color-scheme: light)");
     #listener = this.#onChange.bind(this)
@@ -22,12 +22,16 @@ export default class DualThemePlugin {
         type DropdownSetting<T> = BetterDiscord.DropdownSetting<T>;
 
         const themes = BdApi.Themes.getAll().filter(x => x != undefined);
+        const themeOptions = [
+            { label: "Discord", value: undefined },
+            ...themes.map(x => ({ label: x.name, value: x.id }))
+        ];
 
         const lightThemeSetting: DropdownSetting<string | undefined> = {
             id: "lightTheme",
             name: "Light Theme",
             type: "dropdown",
-            options: themes.map(x => ({ label: x.name, value: x.id })),
+            options: themeOptions,
             value: this.#lightTheme
         };
 
@@ -35,7 +39,7 @@ export default class DualThemePlugin {
             id: "darkTheme",
             name: "Dark Theme",
             type: "dropdown",
-            options: themes.map(x => ({ label: x.name, value: x.id })),
+            options: themeOptions,
             value: this.#darkTheme
         };
 
